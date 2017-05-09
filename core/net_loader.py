@@ -10,8 +10,11 @@ class NetLoader:
     def __init__(self):
         self._base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../data')
 
-    def upload(self, net_object, relpath):
-        fullpath = os.path.join(self._base_dir, relpath)
+    def upload(self, net_object, path, relative=False):
+        if relative:
+            fullpath = os.path.join(self._base_dir, path)
+        else:
+            fullpath = path
 
         if not os.path.isfile(fullpath):
             raise JsonFileNotFound()
@@ -29,8 +32,11 @@ class NetLoader:
         except JSONDecodeError:
             raise
 
-    def unload(self, net_object, relpath):
-        fullpath = os.path.join(self._base_dir, relpath)
+    def unload(self, net_object, path, relative=False):
+        if relative:
+            fullpath = os.path.join(self._base_dir, path)
+        else:
+            fullpath = path
 
         try:
             with open(fullpath, 'w') as file:

@@ -1,17 +1,24 @@
 from copy import deepcopy
 from itertools import starmap
 
+from core.net_transfer_functions import d_sigmoid
 from core.net_error_evaluator import NetIsNotInitialized, NetIsNotCalculated
 
 
 class CM:
-    def __init__(self, nu, mu, d_transfer_function, function_parameters):
+    def __init__(
+            self,
+            nu=0.2,
+            mu=0.9,
+            d_transfer_function=d_sigmoid,
+            function_parameters={'alpha': 1}):
+
         self.__nu = nu
         self.__mu = mu
         self.__df = d_transfer_function
         self.__df_param = function_parameters
 
-    def correct_weights(self, net_object, expected_output_vector):
+    def correct(self, net_object, expected_output_vector):
 
         if net_object.layers is None:
             raise NetIsNotInitialized()
