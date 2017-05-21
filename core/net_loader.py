@@ -1,49 +1,56 @@
 import os
+import pprint
+from copy import deepcopy
+
+import numpy as np
 
 from json import load
 from json import dump
 from json import JSONDecodeError
-from copy import deepcopy
 
 
-class NetLoader:
-    def __init__(self):
-        self._base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../data')
+def upload(net_object, path):
+    if not os.path.isfile(path):
+        raise JsonFileNotFound()
 
-    def upload(self, net_object, path, relative=False):
-        if relative:
-            fullpath = os.path.join(self._base_dir, path)
-        else:
-            fullpath = path
+    try:
+        with open(path, 'r') as file:
+            deserialized_file = load(file)
+            net_object.config = deserialized_file['config']
+            net_object.net = deserialized_file.get('net')
+            net_object.deviation = deserialized_file.get('deviation')
 
-        if not os.path.isfile(fullpath):
-            raise JsonFileNotFound()
+            if net_object.net:
+                for l in range(1, len(net_object.config)):
+                    net_object.net[l-1]['w'] = np.array(net_object.net[l-1]['w'])
+                    net_object.net[l-1]['v'] = np.zeros((net_object.config[l], net_object.config[l-1]+1))
+                    net_object.net[l-1]['o'] = np.zeros((net_object.config[l]))
+                    net_object.net[l-1]['s'] = np.zeros((net_object.config[l]))
 
-        try:
-            with open(fullpath, 'r') as file:
-                deserialized_file = load(file)
-                loaded_net = deepcopy(net_object)
-                loaded_net.config = deserialized_file['config']
-                loaded_net.layers = deserialized_file.get('layers')
-                return loaded_net
+    except KeyError:
+        raise JsonFileStructureIncorrect()
+    except JSONDecodeError:
+        raise
 
-        except KeyError:
-            raise JsonFileStructureIncorrect()
-        except JSONDecodeError:
-            raise
 
-    def unload(self, net_object, path, relative=False):
-        if relative:
-            fullpath = os.path.join(self._base_dir, path)
-        else:
-            fullpath = path
+def unload(net_object, path):
+    try:
+        net_copy = deepcopy(net_object.net)
+        for l in net_copy:
+            l['w'] = l['w'].tolist()
+            del l['v']
+            del l['o']
+            del l['s']
 
-        try:
-            with open(fullpath, 'w') as file:
-                file_dictionary = {'config': net_object.config, 'layers': net_object.layers}
-                dump(file_dictionary, file, sort_keys=True, indent=4)
-        except JSONDecodeError:
-            raise
+        with open(path, 'w') as file:
+            file_dictionary = {
+                'config': net_object.config,
+                'net': net_copy,
+                'deviation': net_object.deviation
+            }
+            dump(file_dictionary, file, sort_keys=True, indent=4)
+    except JSONDecodeError:
+        raise
 
 
 class JsonFileNotFound(Exception):

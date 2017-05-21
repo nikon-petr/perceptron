@@ -1,26 +1,33 @@
 import pprint
 
+from lib.colors import Colors
+
 if __name__ == '__main__':
     from core.net_interface import Net
-    from core.net_corrector_nag import NAG
+    from core.net_nag_corrector import NAG
+    from core.net_standart_corrector import SC
+    from core.net_transfer_functions import d_tanh
     from dataset.dataset import dataset
-    from dataset.normalizer import normalize, normalize_vector
+    from dataset.normalizer import calculate_normalize, normalize_vector, normalize_dataset
 
-    net = Net(NAG)
-    net.initialize_from('/Users/nikon/PycharmProjects/laperseptron/data/test.config.json')
+    net = Net(SC, corrector_param={'df': d_tanh, 'df_p': {'alpha': 1}})
+    net.initialize_from('/Users/nikon/PycharmProjects/laperseptron/data/iris.config.json', 0.001)
     # net.load_from('/Users/nikon/PycharmProjects/laperseptron/data/iris.net.json')
 
-    test_dataset = dataset('/Users/nikon/PycharmProjects/laperseptron/data/iris.test.csv')
-    train_dataset = dataset('/Users/nikon/PycharmProjects/laperseptron/data/iris.train.csv')
+    train = dataset('/Users/nikon/PycharmProjects/laperseptron/data/iris.train.csv')
+    test = dataset('/Users/nikon/PycharmProjects/laperseptron/data/iris.test.csv')
 
-    normalize(test_dataset)
-    sigmas = normalize(train_dataset)
-    net.set_deviation(sigmas)
+    net.set_deviation(calculate_normalize(train))
+    normalize_dataset(train, net)
+    normalize_dataset(test, net)
 
-    for vector in test_dataset:
-        normalize_vector(vector[0], net)
+    net.train(20, 0.1, train, test, 0.1)
 
-    net.train(2000, train_dataset, test_dataset, 0.15)
-    # net.trry(train_dataset, test_dataset)
+    print('\n%sTest Iris Setosa%s' % (Colors.OKGREEN if net.calculate(test[0][0]) == 1 else Colors.FAIL, Colors.ENDC))
+    print('%sTest Iris Versicolour%s' % (Colors.OKGREEN if net.calculate(test[0][1]) == 2 else Colors.FAIL, Colors.ENDC))
+    print('%sTest Iris Virginica%s' % (Colors.OKGREEN if net.calculate(test[0][2]) == 3 else Colors.FAIL, Colors.ENDC))
+    print('\n%sTest Iris Setosa%s' % (Colors.OKGREEN if net.calculate(test[0][3]) == 1 else Colors.FAIL, Colors.ENDC))
+    print('%sTest Iris Versicolour%s' % (Colors.OKGREEN if net.calculate(test[0][4]) == 2 else Colors.FAIL, Colors.ENDC))
+    print('%sTest Iris Virginica%s' % (Colors.OKGREEN if net.calculate(test[0][5]) == 3 else Colors.FAIL, Colors.ENDC))
 
     net.save_to('/Users/nikon/PycharmProjects/laperseptron/data/iris.net.json')

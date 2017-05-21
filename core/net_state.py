@@ -1,10 +1,11 @@
+import numpy as np
 from core.net_error_evaluator import NetIsNotCalculated
 
 
 class NetState:
     def __init__(self):
         self.config = None
-        self.layers = None
+        self.net = None
         self.deviation = None
         self.is_calculated = False
         self.is_corrected = False
@@ -14,14 +15,10 @@ class NetState:
         if not self.is_calculated:
             raise NetIsNotCalculated
 
-        return [neuron['output'] for neuron in self.layers[-1]]
+        return self.net[-1]['o']
 
     def clear_for_output(self):
-        for layer in self.layers:
-            for neuron in layer:
-                del neuron['sigma']
-                del neuron['input']
-                del neuron['output']
-                del neuron['d_input']
-                del neuron['d_output']
-                del neuron['velocity']
+        for l in self.net:
+            del l['v']
+            del l['o']
+            del l['s']

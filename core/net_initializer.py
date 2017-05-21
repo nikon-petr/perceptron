@@ -1,24 +1,20 @@
-import random
+import pprint
+import numpy as np
 
-from copy import deepcopy
 
+def initialize(net_object, factor=0.01):
+    if net_object.config is None:
+        raise NetConfigIndefined()
 
-class NetInitializer:
-    def initialize(self, net_object):
-        if net_object.config is None:
-            raise NetConfigIndefined()
+    net_object.net = []
 
-        initializing_net = net_object
-        config_layers = initializing_net.config
-
-        initializing_net.layers = [[{'synapses': [random.uniform(-1, 1)
-                                     for synapse in range(previous_layer+1)]}
-                                    for neuron in range(current_layer+1)]
-                                   for previous_layer, current_layer in zip(config_layers, config_layers[1:])]
-
-        del initializing_net.layers[-1][0]
-
-        return initializing_net
+    for l in range(1, len(net_object.config)):
+        net_object.net.append({
+            'w': np.random.uniform(-factor, factor, (net_object.config[l], net_object.config[l-1] + 1)),
+            'v': np.zeros((net_object.config[l], net_object.config[l-1] + 1)),
+            'o': np.zeros((net_object.config[l])),
+            's': np.zeros((net_object.config[l])),
+        })
 
 
 class NetConfigIndefined(Exception):
