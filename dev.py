@@ -10,6 +10,7 @@ if __name__ == '__main__':
 
     # net = Net(functions['tanh'], NAG, corrector_param={'mu': 0.97})
     net = Net(functions['tanh'], SC)
+
     net.initialize_from('/Users/nikon/PycharmProjects/laperseptron/data/iris.config.json', 0.001)
     # net.load_from('/Users/nikon/PycharmProjects/laperseptron/data/iris.net.json')
 

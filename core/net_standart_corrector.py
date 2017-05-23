@@ -1,18 +1,15 @@
 import numpy as np
 
+from core.net_abstract_corrector import Corrector
 from core.net_error_evaluator import NetIsNotInitialized, NetIsNotCalculated
 
 
-class SC:
+class SC(Corrector):
     def __init__(self, nu=0.1):
-        self.nu = nu
+        super(SC, self).__init__(nu)
 
     def correct(self, net_object, output_vector):
-
-        if net_object.net is None:
-            raise NetIsNotInitialized()
-        if not net_object.is_calculated:
-            raise NetIsNotCalculated()
+        super(SC, self).correct(net_object, output_vector)
 
         net = net_object.net
 
