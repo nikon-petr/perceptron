@@ -1,8 +1,6 @@
 import random
-import numpy as np
 
 from core.net_calculator import calculate
-from core.net_nag_corrector import NAG
 from core.net_error_evaluator import evaluate
 from core.net_initializer import initialize
 from core.net_loader import upload, unload
@@ -21,8 +19,8 @@ def raise_exceptions(f):
 
 
 class Net:
-    def __init__(self, corrector, corrector_param=None, calculator_param=None):
-        self.__state = NetState()
+    def __init__(self, f, corrector, f_param={}, corrector_param=None):
+        self.__state = NetState(f[0], f[1], f_param)
         self.__corrector = corrector(**corrector_param) if corrector_param else corrector()
 
     @property
@@ -47,25 +45,17 @@ class Net:
         initialize(self.__state, factor)
 
     @raise_exceptions
-    def set_deviation(self, deviation_list):
-        self.__state.deviation = deviation_list
+    def set_normalization(self, deviation_list):
+        self.__state.normalization = deviation_list
 
     @raise_exceptions
-    def get_deviation(self):
-        return self.__state.deviation
+    def get_normalization(self):
+        return self.__state.normalization
 
     @raise_exceptions
     def calculate(self, vector):
         calculate(self.__state, vector)
-        return self.__state.get_output_vector().argmax(axis=0) + 1
-
-    def trry(self, inp, outp):
-        self.__corrector.nu = 1
-        calculate(self.__state, inp, training=True)
-        print(evaluate(self.__state, outp))
-        self.__corrector.correct(self.__state, outp)
-        calculate(self.__state, inp, training=True)
-        print(evaluate(self.__state, outp))
+        return self.__state.get_tag()
 
     @raise_exceptions
     def train(self, epoch, start_nu, train_data, test_data, step):
@@ -87,11 +77,7 @@ class Net:
 
             delta = em - e_sum / len(test_data)
             em = e_sum / len(test_data)
-            em_color = Colors.OKGREEN if em < 0.15 else Colors.FAIL
+            em_color = Colors.OKGREEN if em < 0.1 else Colors.FAIL
+            d_color = Colors.OKGREEN if delta > 0 else Colors.FAIL
 
-            print('EPOCH:%s %sEm = %.3f%s D = %s' % (epoch, em_color, em, Colors.ENDC, delta))
-
-            # if delta < 0:
-            #     self.__corrector.nu = nu / 10
-            # if abs(delta) < error_delta:
-            #     break
+            print('EPOCH:%s %sEm = %.3f%s\t %sD = %.3f%s' % (epoch, em_color, em, Colors.ENDC, d_color, delta, Colors.ENDC))

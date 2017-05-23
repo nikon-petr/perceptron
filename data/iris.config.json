@@ -1,4 +1,9 @@
 {
+  "tags": [
+    "Iris Setosa",
+    "Iris Versicolour",
+    "Iris Virginica"
+  ],
   "config": [
     4,
     2,

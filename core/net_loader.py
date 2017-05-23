@@ -1,9 +1,7 @@
 import os
-import pprint
-from copy import deepcopy
-
 import numpy as np
 
+from copy import deepcopy
 from json import load
 from json import dump
 from json import JSONDecodeError
@@ -17,8 +15,9 @@ def upload(net_object, path):
         with open(path, 'r') as file:
             deserialized_file = load(file)
             net_object.config = deserialized_file['config']
+            net_object.tags = deserialized_file['tags']
             net_object.net = deserialized_file.get('net')
-            net_object.deviation = deserialized_file.get('deviation')
+            net_object.deviation = deserialized_file.get('normalization')
 
             if net_object.net:
                 for l in range(1, len(net_object.config)):
@@ -45,8 +44,9 @@ def unload(net_object, path):
         with open(path, 'w') as file:
             file_dictionary = {
                 'config': net_object.config,
+                'tags': net_object.tags,
                 'net': net_copy,
-                'deviation': net_object.deviation
+                'normalization': net_object.normalization
             }
             dump(file_dictionary, file, sort_keys=True, indent=4)
     except JSONDecodeError:
