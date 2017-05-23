@@ -36,6 +36,6 @@ class NAG:
 
             net[l]['w'] -= g
             net[l]['v'] = net[l]['v'] * self.__mu + g
-            net[l-1]['s'] = ws * df
+            net[l - 1]['s'] = ws * df
 
         del net[0]

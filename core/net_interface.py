@@ -5,7 +5,6 @@ from core.net_error_evaluator import evaluate
 from core.net_initializer import initialize
 from core.net_loader import upload, unload
 from core.net_state import NetState
-
 from lib.colors import Colors
 
 
@@ -15,6 +14,7 @@ def raise_exceptions(f):
             return f(*args, **kw)
         except:
             raise
+
     return wrapper
 
 
@@ -80,4 +80,5 @@ class Net:
             em_color = Colors.OKGREEN if em < 0.1 else Colors.FAIL
             d_color = Colors.OKGREEN if delta > 0 else Colors.FAIL
 
-            print('EPOCH:%s %sEm = %.3f%s\t %sD = %.3f%s' % (epoch, em_color, em, Colors.ENDC, d_color, delta, Colors.ENDC))
+            print('EPOCH:%s %sEm = %.3f%s\t %sD = %.3f%s' % (
+            epoch, em_color, em, Colors.ENDC, d_color, delta, Colors.ENDC))

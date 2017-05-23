@@ -2,7 +2,6 @@ import numpy as np
 
 
 def calculate(net_object, input_vector, training=False):
-
     if net_object.config[0] != len(input_vector):
         raise IncorrectInputVectorLength()
 
@@ -11,7 +10,7 @@ def calculate(net_object, input_vector, training=False):
     net.insert(0, {'o': input_vector})
 
     for l in range(1, len(net)):
-        bo = np.insert(net[l-1]['o'], 0, 1)
+        bo = np.insert(net[l - 1]['o'], 0, 1)
         i = np.dot(net[l]['w'], bo)
         net[l]['o'] = np.vectorize(lambda x: net_object.f(x, **net_object.f_param))(i)
 

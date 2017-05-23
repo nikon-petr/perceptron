@@ -1,10 +1,10 @@
 import os
-import numpy as np
-
 from copy import deepcopy
-from json import load
-from json import dump
 from json import JSONDecodeError
+from json import dump
+from json import load
+
+import numpy as np
 
 
 def upload(net_object, path):
@@ -21,10 +21,10 @@ def upload(net_object, path):
 
             if net_object.net:
                 for l in range(1, len(net_object.config)):
-                    net_object.net[l-1]['w'] = np.array(net_object.net[l-1]['w'])
-                    net_object.net[l-1]['v'] = np.zeros((net_object.config[l], net_object.config[l-1]+1))
-                    net_object.net[l-1]['o'] = np.zeros((net_object.config[l]))
-                    net_object.net[l-1]['s'] = np.zeros((net_object.config[l]))
+                    net_object.net[l - 1]['w'] = np.array(net_object.net[l - 1]['w'])
+                    net_object.net[l - 1]['v'] = np.zeros((net_object.config[l], net_object.config[l - 1] + 1))
+                    net_object.net[l - 1]['o'] = np.zeros((net_object.config[l]))
+                    net_object.net[l - 1]['s'] = np.zeros((net_object.config[l]))
 
     except KeyError:
         raise JsonFileStructureIncorrect()

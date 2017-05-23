@@ -1,6 +1,5 @@
 from math import e
 
-
 functions = {
     'sigmoid': (
         lambda s, alpha=1: 1 / (1 + e ** (-(alpha * s))),

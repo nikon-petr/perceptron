@@ -2,7 +2,6 @@ import numpy as np
 
 
 def evaluate(net_object, expected_output_vector):
-
     if net_object.net is None:
         raise NetIsNotInitialized()
     if not net_object.is_calculated:
