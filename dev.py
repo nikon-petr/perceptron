@@ -3,11 +3,13 @@ if __name__ == '__main__':
     from core.net_interface import Net
     from core.net_nag_corrector import NAG
     from core.net_standart_corrector import SC
+    from core.net_adam_corrector import Adam
     from core.net_transfer_functions import functions
     from dataset.dataset import dataset
     from dataset.normalizer import calculate_normalize, normalize_dataset
 
-    net = Net(functions['tanh'], NAG, corrector_param={'mu': 0.97})
+    net = Net(functions['tanh'], Adam)
+    # net = Net(functions['tanh'], NAG, corrector_param={'mu': 0.97})
     # net = Net(functions['tanh'], SC)
 
     net.initialize_from('/Users/nikon/PycharmProjects/laperseptron/data/iris.config.json', 0.001)
@@ -20,7 +22,8 @@ if __name__ == '__main__':
     normalize_dataset(train, net)
     normalize_dataset(test, net)
 
-    net.train(10, 0.1, train, test, 2)
+    net.train(5, 0.1, train, test, 2)
+    # net.train(10, 0.1, train, test, 2)
     # net.train(25, 0.1, train, test, 5)
 
     net.save_to('/Users/nikon/PycharmProjects/laperseptron/data/iris.net.json')
