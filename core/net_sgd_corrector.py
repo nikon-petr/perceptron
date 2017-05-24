@@ -3,15 +3,15 @@ import numpy as np
 from core.net_abstract_corrector import Corrector
 
 
-class SC(Corrector):
+class SGD(Corrector):
     def __init__(self, nu=0.1):
-        super(SC, self).__init__(nu)
+        super(SGD, self).__init__(nu)
 
     def initialize(self, net_object):
-        super(SC, self).initialize(net_object)
+        super(SGD, self).initialize(net_object)
 
     def correct(self, net_object, output_vector):
-        super(SC, self).correct(net_object, output_vector)
+        super(SGD, self).correct(net_object, output_vector)
 
         net = net_object.net
 

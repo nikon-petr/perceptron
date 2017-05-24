@@ -19,17 +19,17 @@ def raise_exceptions(f):
 
 
 class Net:
-    def __init__(self, f, corrector, f_param={}, corrector_param=None):
+    def __init__(self, f, corrector, f_param={}):
         self.__state = NetState(f[0], f[1], f_param)
-        self.__corrector = corrector(**corrector_param) if corrector_param else corrector()
+        self.__corrector = corrector
 
     @property
     def corrector(self):
         return self.__corrector
 
     @corrector.setter
-    def corrector(self, new_corrector, new_corrector_param):
-        self.__corrector = new_corrector(**new_corrector_param)
+    def corrector(self, new_corrector):
+        self.__corrector = new_corrector
 
     @raise_exceptions
     def load_from(self, path):
@@ -53,17 +53,18 @@ class Net:
         return self.__state.normalization
 
     @raise_exceptions
-    def calculate(self, vector):
+    def calculate(self, vector, get_vector=False):
         calculate(self.__state, vector)
+        if get_vector:
+            return self.__state.get_output_vector()
         return self.__state.get_tag()
 
     @raise_exceptions
     def train(self, epoch, start_nu, train_data, test_data, step):
-        self.__corrector.nu = start_nu
         em = 0
         for epoch in range(epoch):
             if epoch + 1 % step == 0:
-                self.__corrector.nu /= 10
+                self.__corrector.nu /= 5
 
             e_sum = 0
             train_data_indexes = random.sample(range(len(train_data[0])), len(train_data[0]))
@@ -82,3 +83,6 @@ class Net:
 
             print('EPOCH:%s %sEm = %.3f%s\t %sD = %.3f%s' % (
             epoch, em_color, em, Colors.ENDC, d_color, delta, Colors.ENDC))
+
+            if em < 0.001:
+                break

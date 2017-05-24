@@ -2,7 +2,7 @@ if __name__ == '__main__':
     from lib.colors import Colors
     from core.net_interface import Net
     from core.net_nag_corrector import NAG
-    from core.net_standart_corrector import SC
+    from core.net_sgd_corrector import SGD
     from core.net_adam_corrector import Adam
     from core.net_transfer_functions import functions
     from dataset.dataset import dataset

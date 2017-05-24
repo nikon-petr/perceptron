@@ -16,7 +16,7 @@ def upload(net_object, path):
         with open(path, 'r') as file:
             deserialized_file = load(file)
             net_object.config = deserialized_file['config']
-            net_object.tags = deserialized_file['tags']
+            net_object.tags = deserialized_file.get('tags')
             net_object.net = deserialized_file.get('net')
             net_object.deviation = deserialized_file.get('normalization')
 

@@ -10,6 +10,6 @@ def dataset(csv_path):
         output_vectors = []
         for row in reader:
             input_vectors.append(row[:-3])
-            output_vectors.append(row[-3:])
+            output_vectors.append(row[:-3])
         dataset = (np.array(input_vectors), np.array(output_vectors))
         return dataset
