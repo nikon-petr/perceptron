@@ -7,6 +7,9 @@ class SC(Corrector):
     def __init__(self, nu=0.1):
         super(SC, self).__init__(nu)
 
+    def initialize(self, net_object):
+        super(SC, self).initialize(net_object)
+
     def correct(self, net_object, output_vector):
         super(SC, self).correct(net_object, output_vector)
 

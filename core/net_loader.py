@@ -1,5 +1,4 @@
 import os
-from copy import deepcopy
 from json import JSONDecodeError
 from json import dump
 from json import load
@@ -24,9 +23,7 @@ def upload(net_object, path):
             if net_object.net:
                 for l in range(1, len(net_object.config)):
                     net_object.net[l - 1]['w'] = np.array(net_object.net[l - 1]['w'])
-                    net_object.net[l - 1]['v'] = np.zeros((net_object.config[l], net_object.config[l - 1] + 1))
                     net_object.net[l - 1]['o'] = np.zeros((net_object.config[l]))
-                    net_object.net[l - 1]['s'] = np.zeros((net_object.config[l]))
 
     except KeyError:
         raise JsonFileStructureIncorrect()
@@ -36,12 +33,9 @@ def upload(net_object, path):
 
 def unload(net_object, path):
     try:
-        net_copy = deepcopy(net_object.net)
-        for l in net_copy:
-            l['w'] = l['w'].tolist()
-            del l['v']
-            del l['o']
-            del l['s']
+        net_copy = []
+        for l in range(len(net_object.net)):
+            net_copy.append({'w': net_object.net[l]['w'].tolist()})
 
         with open(path, 'w') as file:
             file_dictionary = {

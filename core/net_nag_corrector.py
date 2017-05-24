@@ -1,3 +1,5 @@
+import pprint
+
 import numpy as np
 
 from core.net_abstract_corrector import Corrector
@@ -7,6 +9,12 @@ class NAG(Corrector):
     def __init__(self, nu=0.1, mu=0.9):
         super(NAG, self).__init__(nu)
         self.__mu = mu
+
+    def initialize(self, net_object):
+        super(NAG, self).initialize(net_object)
+        if net_object.net[-1].get('v') is None:
+            for l in range(1, len(net_object.net)):
+                net_object.net[l]['v'] = np.zeros((net_object.config[l], net_object.config[l - 1] + 1))
 
     def correct(self, net_object, output_vector):
         super(NAG, self).correct(net_object, output_vector)
