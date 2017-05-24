@@ -1,9 +1,13 @@
 import numpy as np
 
+from core.net_errors import NetConfigIndefined, IncorrectFactorValue
+
 
 def initialize(net_object, factor=0.01):
     if net_object.config is None:
         raise NetConfigIndefined()
+    if abs(factor) > 1:
+        raise IncorrectFactorValue()
 
     net_object.net = []
 
@@ -14,11 +18,3 @@ def initialize(net_object, factor=0.01):
             'o': np.zeros((net_object.config[l])),
             's': np.zeros((net_object.config[l])),
         })
-
-
-class NetConfigIndefined(Exception):
-    pass
-
-
-class NetConfigIncorrect(Exception):
-    pass

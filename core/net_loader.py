@@ -6,6 +6,8 @@ from json import load
 
 import numpy as np
 
+from core.net_errors import JsonFileStructureIncorrect, JsonFileNotFound
+
 
 def upload(net_object, path):
     if not os.path.isfile(path):
@@ -51,11 +53,3 @@ def unload(net_object, path):
             dump(file_dictionary, file, sort_keys=True, indent=4)
     except JSONDecodeError:
         raise
-
-
-class JsonFileNotFound(Exception):
-    pass
-
-
-class JsonFileStructureIncorrect(Exception):
-    pass

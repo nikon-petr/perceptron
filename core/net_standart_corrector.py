@@ -1,7 +1,6 @@
 import numpy as np
 
 from core.net_abstract_corrector import Corrector
-from core.net_error_evaluator import NetIsNotInitialized, NetIsNotCalculated
 
 
 class SC(Corrector):

@@ -1,4 +1,4 @@
-from core.net_error_evaluator import NetIsNotCalculated
+from core.net_errors import NetIsNotCalculated
 
 
 class NetState:

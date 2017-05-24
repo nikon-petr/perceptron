@@ -1,7 +1,6 @@
 import numpy as np
 
 from core.net_abstract_corrector import Corrector
-from core.net_error_evaluator import NetIsNotInitialized, NetIsNotCalculated
 
 
 class NAG(Corrector):
@@ -19,8 +18,8 @@ class NAG(Corrector):
 
         for l in range(1, len(net)):
             bo = np.insert(net[l - 1]['o'], 0, 1)
-            i = np.dot(net[l]['w'], bo)
-            net[l]['o'] = np.vectorize(lambda x: net_object.f(x, **net_object.f_param))(i)
+            io = np.dot(net[l]['w'], bo)
+            net[l]['o'] = np.vectorize(lambda x: net_object.f(x, **net_object.f_param))(io)
 
         df = np.vectorize(lambda x: net_object.df(x, **net_object.f_param))(net[-1]['o'])
         net[-1]['s'] = (net[-1]['o'] - output_vector) * df

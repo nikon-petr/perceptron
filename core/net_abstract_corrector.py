@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from core.net_error_evaluator import NetIsNotInitialized, NetIsNotCalculated
+from core.net_errors import NetIsNotInitialized, NetIsNotCalculated
 
 
 class Corrector:

@@ -1,5 +1,7 @@
 import numpy as np
 
+from core.net_errors import IncorrectInputVectorLength
+
 
 def calculate(net_object, input_vector, training=False):
     if net_object.config[0] != len(input_vector):
@@ -18,7 +20,3 @@ def calculate(net_object, input_vector, training=False):
         del net[0]
 
     net_object.is_calculated = True
-
-
-class IncorrectInputVectorLength(Exception):
-    pass

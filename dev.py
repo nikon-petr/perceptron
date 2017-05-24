@@ -1,6 +1,5 @@
-from lib.colors import Colors
-
 if __name__ == '__main__':
+    from lib.colors import Colors
     from core.net_interface import Net
     from core.net_nag_corrector import NAG
     from core.net_standart_corrector import SC
